@@ -1,0 +1,23 @@
+.menu {
+  display: inline-flex;
+  align-items: center;
+}
+
+.buttons-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.radio-buttons-wrapper {
+  display: flex;
+  gap: 40px;
+}
+
+.columns {
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 368px;
+  gap: 10px;
+}
