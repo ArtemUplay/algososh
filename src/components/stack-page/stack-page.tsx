@@ -49,6 +49,7 @@ export const StackPage: React.FC = () => {
   };
 
   const onAddButtonClick = async () => {
+    setInputValue('');
     stack.push(inputValue);
 
     setStackItems([...stack.toArray()]);
@@ -79,17 +80,22 @@ export const StackPage: React.FC = () => {
           value={inputValue}
           onChange={onInputChange}
         />
-        <Button text='Добавить' onClick={onAddButtonClick} />
+        <Button
+          text='Добавить'
+          onClick={onAddButtonClick}
+          disabled={!inputValue}
+          isLoader={isChanging}
+        />
         <Button
           text='Удалить'
           onClick={onDeleteButtonClick}
-          disabled={!!!stackItems.length}
+          disabled={!!!stackItems.length || isChanging}
         />
         <div className={styles['clear-button-wrapper']}>
           <Button
             text='Очистить'
             onClick={onClearButtonClick}
-            disabled={!!!stackItems.length}
+            disabled={!!!stackItems.length || isChanging}
           />
         </div>
       </div>

@@ -1,0 +1,16 @@
+.wrapper {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.clear-button-wrapper {
+  margin: 0px 0px 0px 80px;
+}
+
+.items-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 40px 0px 0px 0px;
+}
