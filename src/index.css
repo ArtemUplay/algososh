@@ -15,3 +15,7 @@ code {
 .input {
   max-width: 380px;
 }
+
+.button {
+  flex: 1 1 auto;
+}
