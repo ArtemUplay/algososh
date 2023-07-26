@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import styles from './string.module.css';
 import { Input } from '../ui/input/input';
@@ -8,49 +8,41 @@ import { ElementStates } from '../../types/element-states';
 
 const StringComponent: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
-  const [buttonClicked, setButtonClicked] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [circles, setCircles] = useState<string[]>([]);
-  const [animationIndex, setAnimationIndex] = useState<number>(-1);
+  const [isChanging, setIsChanging] = useState<boolean>(false);
+  const [letters, setLetters] = useState<string[]>([]);
+  const [changingIndexes, setChangingIndexes] = useState<number[]>([]);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const reverseByTwoPointers = async (arr: string[]) => {
+    let start = 0;
+    let end = arr.length - 1;
+    const changingIndexes: number[] = [];
+
+    while (start <= end) {
+      changingIndexes.push(start);
+      changingIndexes.push(end);
+      [arr[start], arr[end]] = [arr[end], arr[start]];
+      setLetters([...arr]);
+      setChangingIndexes([...changingIndexes, start, end]);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      start++;
+      end--;
+    }
+  };
+
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
-  const onClickButton = () => {
-    setButtonClicked(true);
-    setIsLoading(true);
+  const onClickButton = async () => {
+    setIsChanging(true);
 
-    const arr = inputValue.split('');
-    let start = 0;
-    let end = inputValue.length - 1;
+    const arr: string[] = [...inputValue.split('')];
+    setLetters(arr);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    reverseByTwoPointers(arr);
 
-    const animationInterval = setInterval(() => {
-      if (start >= end) {
-        clearInterval(animationInterval);
-        setIsLoading(false);
-        // setButtonClicked(false);
-
-        return;
-      }
-
-      const temp = arr[start];
-      arr[start] = arr[end];
-      arr[end] = temp;
-
-      setCircles([...arr]);
-      setAnimationIndex(start);
-
-      start++;
-      end--;
-    }, 1000);
+    setIsChanging(false);
   };
-
-  useEffect(() => {
-    if (inputValue && circles.length > 0 && buttonClicked) {
-      // setButtonClicked(false);
-    }
-  }, [inputValue, circles, buttonClicked]);
 
   return (
     <SolutionLayout title='Строка'>
@@ -59,43 +51,30 @@ const StringComponent: React.FC = () => {
           maxLength={11}
           isLimitText={true}
           value={inputValue}
-          onChange={handleInputChange}
+          onChange={onInputChange}
         />
         <Button
           text='Развернуть'
           onClick={onClickButton}
-          isLoader={isLoading}
+          isLoader={isChanging}
+          disabled={inputValue === ''}
+          extraClass='button'
         />
       </div>
-      {buttonClicked && (
-        <div
-          style={{
-            marginTop: '120px',
-            display: 'flex',
-            gap: '16px',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {circles.map((item, index) => {
-            let state: ElementStates | undefined;
+      <div style={{}} className={styles.items}>
+        {letters.map((item, index) => {
+          console.log(changingIndexes);
+          let state = changingIndexes.includes(index);
 
-            if (
-              index === animationIndex ||
-              index === circles.length - animationIndex - 1
-            ) {
-              state = ElementStates.Changing; // Применить цвет #D252E1 к текущей букве
-            } else if (
-              index < animationIndex ||
-              index > circles.length - animationIndex - 1
-            ) {
-              state = ElementStates.Modified; // Применить цвет #7FE051 к отсортированным буквам
-            }
-
-            return <Circle key={index} letter={item} state={state} />;
-          })}
-        </div>
-      )}
+          return (
+            <Circle
+              key={index}
+              letter={item}
+              state={state ? ElementStates.Modified : ElementStates.Changing}
+            />
+          );
+        })}
+      </div>
     </SolutionLayout>
   );
 };
