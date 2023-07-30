@@ -59,9 +59,14 @@ export const StackPage: React.FC = () => {
     setIsChanging(false);
   };
 
-  const onDeleteButtonClick = () => {
+  const onDeleteButtonClick = async () => {
+    setIsChanging(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
     stack.pop();
     setStackItems([...stack.toArray()]);
+
+    setIsChanging(false);
   };
 
   const onClearButtonClick = () => {
@@ -100,22 +105,21 @@ export const StackPage: React.FC = () => {
         </div>
       </div>
       <div className={styles['items-wrapper']}>
-        {stackItems &&
-          stackItems.map((item, index) => {
-            return (
-              <Circle
-                key={index}
-                letter={item}
-                index={index}
-                head={stack.peak() === item ? 'top' : ''}
-                state={
-                  stack.peak() === item && isChanging
-                    ? ElementStates.Changing
-                    : ElementStates.Default
-                }
-              />
-            );
-          })}
+        {stackItems.map((item, index) => {
+          return (
+            <Circle
+              key={index}
+              letter={item}
+              index={index}
+              head={stackItems.length - 1 === index ? 'top' : ''}
+              state={
+                stackItems.length - 1 === index && isChanging
+                  ? ElementStates.Changing
+                  : ElementStates.Default
+              }
+            />
+          );
+        })}
       </div>
     </SolutionLayout>
   );

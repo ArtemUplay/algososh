@@ -87,8 +87,15 @@ export const QueuePage: React.FC = () => {
 
   const onAddButtonClick = async () => {
     setIsChanging(true);
+
+    if (queueItems[queueItems.length - 1]) {
+      setIsChanging(false);
+      return;
+    }
+
     await new Promise((resolve) => setTimeout(resolve, 500));
     queue.enqueue(inputValue);
+
     setIsChanging(false);
     setQueueItems([...queue.getQueue()]);
     setInputValue('');
@@ -96,8 +103,10 @@ export const QueuePage: React.FC = () => {
 
   const onDeleteButtonClick = async () => {
     setIsDeleting(true);
+
     await new Promise((resolve) => setTimeout(resolve, 500));
     queue.dequeue();
+
     setQueueItems([...queue.getQueue()]);
     setIsDeleting(false);
   };

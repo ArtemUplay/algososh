@@ -5,25 +5,26 @@ import styles from './sorting-page.module.css';
 import { Button } from '../ui/button/button';
 import { Direction } from '../../types/direction';
 import { Column } from '../ui/column/column';
+import { ElementStates } from '../../types/element-states';
 
 export const SortingPage: React.FC = () => {
   const [items, setItems] = useState<number[]>([]);
   const [sortingMethod, setSortingMethod] = useState<string>('Выбор');
-  const [sortingDirection, setSortingDirection] = useState<Direction>(
-    Direction.Ascending
-  );
+  const [changingIndexes, setChangingIndexes] = useState<number[]>([]);
+  const [modifiedIndexes, setModifiedIndexes] = useState<number[]>([]);
+  const [isChanging, setIsChanging] = useState<boolean>(false);
 
   const handleSortingMethodChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setSortingMethod(evt.target.value);
   };
 
-  const handleSortingDirectionChange = (evt: MouseEvent<HTMLButtonElement>) => {
-    setSortingDirection(evt.currentTarget.value as Direction);
-
-    if (sortingMethod === 'Выбор' && items.length > 0) {
-      setItems(choiceSortingArr([...items]));
-    } else if (sortingMethod === 'Пузырёк' && items.length > 0) {
-      setItems(bubbleSortingArr([...items]));
+  const handleSortingDirectionChange = async (
+    evt: MouseEvent<HTMLButtonElement>
+  ) => {
+    if (sortingMethod === 'Выбор') {
+      await choiceSortingArr([...items], evt.currentTarget.value as Direction);
+    } else if (sortingMethod === 'Пузырёк') {
+      await bubbleSortingArr([...items], evt.currentTarget.value as Direction);
     }
   };
 
@@ -31,15 +32,21 @@ export const SortingPage: React.FC = () => {
     if (items.length > 0) {
       setItems([]);
     }
+
     setItems(randomArr());
   };
 
   useEffect(() => {
+    setIsChanging(true);
+
     setItems(randomArr());
+
+    setIsChanging(false);
   }, []);
 
   const randomArr = (): number[] => {
     const arr: number[] = [];
+    setModifiedIndexes([]);
 
     const numberArrayItems = Math.floor(Math.random() * (17 - 3) + 3);
 
@@ -52,17 +59,32 @@ export const SortingPage: React.FC = () => {
     return arr;
   };
 
-  const choiceSortingArr = (arr: number[]): number[] => {
+  const choiceSortingArr = async (
+    arr: number[],
+    sortingDirection: Direction
+  ) => {
+    setIsChanging(true);
+    setModifiedIndexes([]);
+
+    let changingIndexes: number[] = [];
+    let modifiedIndexes: number[] = [];
+
     for (let i = 0; i < arr.length; i++) {
       let minIndex = i;
 
       for (let j = i + 1; j < arr.length; j++) {
+        changingIndexes = [];
+        changingIndexes.push(i);
+        changingIndexes.push(j);
+
+        setChangingIndexes([...changingIndexes]);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
         if (sortingDirection === Direction.Ascending) {
           if (arr[j] < arr[minIndex]) {
             minIndex = j;
           }
         } else if (sortingDirection === Direction.Descending) {
-          console.log(sortingDirection);
           if (arr[j] > arr[minIndex]) {
             minIndex = j;
           }
@@ -70,38 +92,69 @@ export const SortingPage: React.FC = () => {
       }
 
       [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
+
+      modifiedIndexes.push(i);
+
+      setModifiedIndexes([...modifiedIndexes]);
+      setItems(arr);
     }
-    return arr;
+
+    setChangingIndexes([]);
+    setIsChanging(false);
   };
 
-  const bubbleSortingArr = (arr: number[]): number[] => {
+  const bubbleSortingArr = async (
+    arr: number[],
+    sortingDirection: Direction
+  ) => {
+    setIsChanging(true);
+    setModifiedIndexes([]);
+
+    let changingIndexes: number[] = [];
+    let modifiedIndexes: number[] = [];
+
     for (let i = 0; i < arr.length; i++) {
-      for (let j = 0; j < arr.length; j++) {
+      for (let j = 0; j < arr.length - (i + 1); j++) {
+        changingIndexes = [];
+
+        changingIndexes.push(j);
+        changingIndexes.push(j + 1);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        setChangingIndexes([...changingIndexes]);
+
         if (sortingDirection === Direction.Ascending) {
           if (arr[j + 1] < arr[j]) {
             [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
+            setItems(arr);
           }
         } else if (sortingDirection === Direction.Descending) {
           if (arr[j + 1] > arr[j]) {
             [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
+            setItems(arr);
           }
         }
       }
+
+      modifiedIndexes.push(arr.length - (i + 1));
+      setModifiedIndexes([...modifiedIndexes]);
     }
 
-    return arr;
+    setChangingIndexes([]);
+    setIsChanging(false);
   };
 
   return (
     <SolutionLayout title='Сортировка массива'>
       <div className={styles.menu}>
-        <div style={{ display: 'flex', gap: '40px' }}>
+        <div className={styles['radio-buttons-wrapper']}>
           <RadioInput
             label='Выбор'
             checked={sortingMethod === 'Выбор'}
             name='Метод сортировки'
             value='Выбор'
             onChange={handleSortingMethodChange}
+            disabled={isChanging}
           />
           <RadioInput
             label='Пузырёк'
@@ -109,32 +162,52 @@ export const SortingPage: React.FC = () => {
             value='Пузырёк'
             checked={sortingMethod === 'Пузырёк'}
             onChange={handleSortingMethodChange}
+            disabled={isChanging}
           />
         </div>
-        <div style={{ display: 'flex', gap: '12px', marginLeft: '52px' }}>
+        <div className={styles['direction-buttons-wrapper']}>
           <Button
             text='По возрастанию'
             sorting={Direction.Ascending}
             value={Direction.Ascending}
             onClick={handleSortingDirectionChange}
+            isLoader={isChanging}
           />
           <Button
             text='По убыванию'
             sorting={Direction.Descending}
             value={Direction.Descending}
             onClick={handleSortingDirectionChange}
+            isLoader={isChanging}
           />
         </div>
-        <div style={{ marginLeft: '80px' }}>
-          <Button text='Новый массив' onClick={handleRandomArrayButtonClick} />
+        <div className={styles['random-array-button-wrapper']}>
+          <Button
+            text='Новый массив'
+            onClick={handleRandomArrayButtonClick}
+            isLoader={isChanging}
+          />
         </div>
       </div>
       <div className={styles.columns}>
-        {items.length > 0
-          ? items.map((item, index) => {
-              return <Column key={index} index={item} />;
-            })
-          : null}
+        {items.map((item, index) => {
+          const changingState = changingIndexes.includes(index);
+          const modifiedState = modifiedIndexes.includes(index);
+
+          return (
+            <Column
+              key={index}
+              index={item}
+              state={
+                modifiedState
+                  ? ElementStates.Modified
+                  : changingState
+                  ? ElementStates.Changing
+                  : ElementStates.Default
+              }
+            />
+          );
+        })}
       </div>
     </SolutionLayout>
   );

@@ -13,6 +13,16 @@
   gap: 40px;
 }
 
+.direction-buttons-wrapper {
+  display: flex;
+  gap: 12px;
+  margin-left: 52px;
+}
+
+.random-array-button-wrapper {
+  margin-left: 80px;
+}
+
 .columns {
   margin-top: 48px;
   display: flex;
