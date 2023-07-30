@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, MouseEvent } from 'react';
+import React, { ChangeEvent, useState, MouseEvent, useEffect } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { RadioInput } from '../ui/radio-input/radio-input';
 import styles from './sorting-page.module.css';
@@ -33,6 +33,10 @@ export const SortingPage: React.FC = () => {
     }
     setItems(randomArr());
   };
+
+  useEffect(() => {
+    setItems(randomArr());
+  }, []);
 
   const randomArr = (): number[] => {
     const arr: number[] = [];
