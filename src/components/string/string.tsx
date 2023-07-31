@@ -77,7 +77,6 @@ const StringComponent: React.FC = () => {
         {letters.map((item, index) => {
           const modifiedState = modifiedIndexes.includes(index);
           const changedState = changingIndexes.includes(index);
-          console.log(modifiedIndexes, changingIndexes, index);
 
           return (
             <Circle

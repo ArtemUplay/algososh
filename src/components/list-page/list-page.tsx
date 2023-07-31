@@ -326,14 +326,23 @@ export const ListPage: React.FC = () => {
             text='Добавить по индексу'
             extraClass='button'
             onClick={onClickAddByIndexButton}
-            disabled={inputIndexValue === '' || inputValue === ''}
+            disabled={
+              inputIndexValue === '' ||
+              +inputIndexValue < 0 ||
+              +inputIndexValue > linkedListItems.length - 1 ||
+              inputValue === ''
+            }
             isLoader={buttonAction === ButtonActions.AddByIndex}
           />
           <Button
             text='Удалить по индексу'
             extraClass='button'
             onClick={onClickDeleteByIndexButton}
-            disabled={inputIndexValue === ''}
+            disabled={
+              inputIndexValue === '' ||
+              +inputIndexValue < 0 ||
+              +inputIndexValue > linkedListItems.length - 1
+            }
             isLoader={buttonAction === ButtonActions.RemoveByIndex}
           />
         </div>

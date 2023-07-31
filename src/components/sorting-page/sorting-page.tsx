@@ -7,12 +7,20 @@ import { Direction } from '../../types/direction';
 import { Column } from '../ui/column/column';
 import { ElementStates } from '../../types/element-states';
 
+type TCurrentButtonValue =
+  | Direction.Ascending
+  | Direction.Descending
+  | 'Новый массив'
+  | null;
+
 export const SortingPage: React.FC = () => {
   const [items, setItems] = useState<number[]>([]);
   const [sortingMethod, setSortingMethod] = useState<string>('Выбор');
   const [changingIndexes, setChangingIndexes] = useState<number[]>([]);
   const [modifiedIndexes, setModifiedIndexes] = useState<number[]>([]);
   const [isChanging, setIsChanging] = useState<boolean>(false);
+  const [currentButtonValue, setCurrentButtonValue] =
+    useState<TCurrentButtonValue>(null);
 
   const handleSortingMethodChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setSortingMethod(evt.target.value);
@@ -43,6 +51,16 @@ export const SortingPage: React.FC = () => {
 
     setIsChanging(false);
   }, []);
+
+  const handleButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+    setCurrentButtonValue(evt.currentTarget.value as TCurrentButtonValue);
+  };
+
+  useEffect(() => {
+    if (!isChanging) {
+      setCurrentButtonValue(null);
+    }
+  }, [isChanging]);
 
   const randomArr = (): number[] => {
     const arr: number[] = [];
@@ -170,22 +188,47 @@ export const SortingPage: React.FC = () => {
             text='По возрастанию'
             sorting={Direction.Ascending}
             value={Direction.Ascending}
-            onClick={handleSortingDirectionChange}
-            isLoader={isChanging}
+            onClick={(evt) => {
+              handleSortingDirectionChange(evt);
+              handleButtonClick(evt);
+            }}
+            disabled={
+              isChanging &&
+              (currentButtonValue === Direction.Descending ||
+                currentButtonValue === 'Новый массив')
+            }
+            isLoader={isChanging && currentButtonValue === Direction.Ascending}
           />
           <Button
             text='По убыванию'
             sorting={Direction.Descending}
             value={Direction.Descending}
-            onClick={handleSortingDirectionChange}
-            isLoader={isChanging}
+            onClick={(evt) => {
+              handleSortingDirectionChange(evt);
+              handleButtonClick(evt);
+            }}
+            isLoader={isChanging && currentButtonValue === Direction.Descending}
+            disabled={
+              isChanging &&
+              (currentButtonValue === Direction.Ascending ||
+                currentButtonValue === 'Новый массив')
+            }
           />
         </div>
         <div className={styles['random-array-button-wrapper']}>
           <Button
             text='Новый массив'
-            onClick={handleRandomArrayButtonClick}
-            isLoader={isChanging}
+            value='Новый массив'
+            onClick={(evt) => {
+              handleRandomArrayButtonClick();
+              handleButtonClick(evt);
+            }}
+            isLoader={isChanging && currentButtonValue === 'Новый массив'}
+            disabled={
+              isChanging &&
+              (currentButtonValue === Direction.Ascending ||
+                currentButtonValue === Direction.Descending)
+            }
           />
         </div>
       </div>

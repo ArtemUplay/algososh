@@ -1,10 +1,18 @@
-import React, { ChangeEvent, useMemo, useState } from 'react';
+import React, {
+  ChangeEvent,
+  MouseEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
 import styles from './queue-page.module.css';
 import { Circle } from '../ui/circle/circle';
 import { ElementStates } from '../../types/element-states';
+
+type TCurrentButtonValue = 'Добавить' | 'Удалить' | 'Очистить' | null;
 
 interface IQueue<T> {
   enqueue: (item: T) => void;
@@ -80,6 +88,8 @@ export const QueuePage: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [isChanging, setIsChanging] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [currentButtonValue, setCurrentButtonValue] =
+    useState<TCurrentButtonValue>(null);
 
   const onInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setInputValue(evt.target.value);
@@ -116,6 +126,16 @@ export const QueuePage: React.FC = () => {
     setQueueItems(queue.getQueue());
   };
 
+  useEffect(() => {
+    if (!isChanging) {
+      setCurrentButtonValue(null);
+    }
+  }, [isChanging]);
+
+  const handleButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+    setCurrentButtonValue(evt.currentTarget.value as TCurrentButtonValue);
+  };
+
   return (
     <SolutionLayout title='Очередь'>
       <div className={styles.wrapper}>
@@ -129,20 +149,51 @@ export const QueuePage: React.FC = () => {
         />
         <Button
           text='Добавить'
-          disabled={!inputValue}
-          onClick={onAddButtonClick}
-          isLoader={isChanging}
+          value='Добавить'
+          disabled={
+            inputValue === '' ||
+            ((isChanging || isDeleting) &&
+              (currentButtonValue === 'Добавить' ||
+                currentButtonValue === 'Очистить'))
+          }
+          onClick={(evt) => {
+            onAddButtonClick();
+            handleButtonClick(evt);
+          }}
+          isLoader={isChanging && currentButtonValue === 'Добавить'}
         />
         <Button
           text='Удалить'
-          disabled={queue.isEmpty() || isChanging}
-          onClick={onDeleteButtonClick}
+          value='Удалить'
+          disabled={
+            queue.isEmpty() ||
+            (isChanging &&
+              (currentButtonValue === 'Добавить' ||
+                currentButtonValue === 'Очистить'))
+          }
+          onClick={(evt) => {
+            onDeleteButtonClick();
+            handleButtonClick(evt);
+          }}
+          isLoader={
+            (isChanging || isDeleting) && currentButtonValue === 'Удалить'
+          }
         />
         <div className={styles['clear-button-wrapper']}>
           <Button
             text='Очистить'
-            disabled={queue.isEmpty() || isChanging}
-            onClick={onClearButtonClick}
+            value='Очистить'
+            disabled={
+              queue.isEmpty() ||
+              ((isChanging || isDeleting) &&
+                (currentButtonValue === 'Добавить' ||
+                  currentButtonValue === 'Удалить'))
+            }
+            onClick={(evt) => {
+              onClearButtonClick();
+              handleButtonClick(evt);
+            }}
+            isLoader={isChanging && currentButtonValue === 'Очистить'}
           />
         </div>
       </div>
