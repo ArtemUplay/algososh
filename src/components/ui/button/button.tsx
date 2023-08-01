@@ -22,6 +22,7 @@ export const Button: React.FC<ButtonProps> = ({
   sorting,
   linkedList,
   disabled,
+  onClick,
   ...rest
 }) => {
   const currentIcon =
@@ -37,6 +38,7 @@ export const Button: React.FC<ButtonProps> = ({
       className={className}
       type={type}
       disabled={isLoader || disabled}
+      onClick={onClick}
       {...rest}
     >
       {isLoader ? (
