@@ -349,11 +349,6 @@ export const ListPage: React.FC = () => {
       </div>
       <div className={styles.items}>
         {linkedListItems.map((item, index) => {
-          console.log(
-            isChanging &&
-              buttonAction === ButtonActions.RemoveByIndex &&
-              changingIndex === index
-          );
           return (
             <React.Fragment key={`fragment-${index}`}>
               <Circle
