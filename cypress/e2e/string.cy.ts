@@ -1,154 +1,161 @@
 /// <reference types="cypress" />
+import {
+  inputSelector,
+  buttonSelector,
+  circleSelector,
+  circleBorderSelector,
+  defaultBorderColor,
+  changingBorderColor,
+  modifiedBorderColor,
+} from '../../src/constants/selectors';
 
 describe('Проверка компонента string', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000');
-
-    cy.get('[data-testid="link-to-string"]').click();
+    cy.visit('/recursion');
 
     cy.url().should('include', '/recursion');
   });
 
   it('Проверка, что при пустом инпуте кнопка будет заблокирована', () => {
-    cy.get('[data-testid="input"]').invoke('prop', 'value').should('eq', '');
+    cy.get(inputSelector).invoke('prop', 'value').should('eq', '');
 
-    cy.get('[data-testid="button"]').should('have.attr', 'disabled');
+    cy.get(buttonSelector).should('have.attr', 'disabled');
   });
 
   it('Проверка на корректность разворачивания строки', () => {
-    cy.get('[data-testid="input"]').type('hello');
+    cy.get(inputSelector).type('hello');
 
-    cy.get('[data-testid="button"]').click();
+    cy.get(buttonSelector).click();
 
-    cy.get('[class^=circle_content__]').should('have.length', 5);
+    cy.get(circleSelector).should('have.length', 5);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(0)
       .should('contain.text', 'h')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(0, 50, 255)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', defaultBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(1)
       .should('contain.text', 'e')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(0, 50, 255)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', defaultBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(2)
       .should('contain.text', 'l')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(0, 50, 255)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', defaultBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(3)
       .should('contain.text', 'l')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(0, 50, 255)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', defaultBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(4)
       .should('contain.text', 'o')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(0, 50, 255)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', defaultBorderColor);
 
     // eslint-disable-next-line
     cy.wait(1000);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(0)
       .should('contain.text', 'o')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(1)
       .should('contain.text', 'e')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(210, 82, 225)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', changingBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(2)
       .should('contain.text', 'l')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(0, 50, 255)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', defaultBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(3)
       .should('contain.text', 'l')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(210, 82, 225)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', changingBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(4)
       .should('contain.text', 'h')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
 
     // eslint-disable-next-line
     cy.wait(1000);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(0)
       .should('contain.text', 'o')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(1)
       .should('contain.text', 'l')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(2)
       .should('contain.text', 'l')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(210, 82, 225)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', changingBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(3)
       .should('contain.text', 'e')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(4)
       .should('contain.text', 'h')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
 
     // eslint-disable-next-line
     cy.wait(1000);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(0)
       .should('contain.text', 'o')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(1)
       .should('contain.text', 'l')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(2)
       .should('contain.text', 'l')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(3)
       .should('contain.text', 'e')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
 
-    cy.get('[class^=circle_content__]')
+    cy.get(circleSelector)
       .eq(4)
       .should('contain.text', 'h')
-      .find('[class^=circle_circle__]')
-      .should('have.css', 'border', '4px solid rgb(127, 224, 81)');
+      .find(circleBorderSelector)
+      .should('have.css', 'border', modifiedBorderColor);
   });
 });

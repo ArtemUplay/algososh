@@ -1,7 +1,7 @@
 describe('Навигация', () => {
   it('Должно перенаправить на страницу со строкой', () => {
     // Переход на начальную страницу
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
 
     // Нажатие на элемент, который приводит к перенаправлению
     cy.get('[data-testid="link-to-string"]').click();
@@ -17,7 +17,7 @@ describe('Навигация', () => {
   });
 
   it('Должно перенаправить на страницу с Фибоначчи', () => {
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
 
     cy.get('[data-testid="link-to-fibonacci"]').click();
 
@@ -29,7 +29,7 @@ describe('Навигация', () => {
   });
 
   it('Должно перенаправить на страницу с сортировкой массива', () => {
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
 
     cy.get('[data-testid="link-to-sorting"]').click();
 
@@ -41,7 +41,7 @@ describe('Навигация', () => {
   });
 
   it('Должно перенаправить на страницу со стеком', () => {
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
 
     cy.get('[data-testid="link-to-stack"]').click();
 
@@ -53,7 +53,7 @@ describe('Навигация', () => {
   });
 
   it('Должно перенаправить на страницу с очередью', () => {
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
 
     cy.get('[data-testid="link-to-queue"]').click();
 
@@ -65,7 +65,7 @@ describe('Навигация', () => {
   });
 
   it('Должно перенаправить на страницу со списком', () => {
-    cy.visit('http://localhost:3000');
+    cy.visit('/');
 
     cy.get('[data-testid="link-to-list"]').click();
 

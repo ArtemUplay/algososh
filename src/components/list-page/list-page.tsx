@@ -156,7 +156,7 @@ export const ListPage: React.FC = () => {
   };
 
   const onInputIndexValueChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setInputIndexValue(evt.target.value);
+    if (!isNaN(+evt.target.value)) setInputIndexValue(evt.target.value);
   };
 
   const onClickAddHeadButton = async () => {

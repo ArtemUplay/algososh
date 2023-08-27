@@ -11,7 +11,7 @@ export const FibonacciPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(evt.target.value);
+    if (!isNaN(+evt.target.value)) setInputValue(evt.target.value);
   };
 
   const onClickButton = () => {
