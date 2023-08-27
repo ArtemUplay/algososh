@@ -37,6 +37,8 @@ const StringComponent: React.FC = () => {
       start++;
       end--;
     }
+
+    setIsChanging(false);
   };
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,8 +46,8 @@ const StringComponent: React.FC = () => {
   };
 
   const onClickButton = async () => {
-    setModifiedIndexes([]);
     setIsChanging(true);
+    setModifiedIndexes([]);
 
     const arr: string[] = [...inputValue.split('')];
     setLetters(arr);
@@ -53,19 +55,20 @@ const StringComponent: React.FC = () => {
     reverseByTwoPointers(arr);
 
     setInputValue('');
-    setIsChanging(false);
   };
 
   return (
     <SolutionLayout title='Строка'>
       <div className={styles.wrapper}>
         <Input
+          data-testid='input'
           maxLength={11}
           isLimitText={true}
           value={inputValue}
           onChange={onInputChange}
         />
         <Button
+          data-testid='button'
           text='Развернуть'
           onClick={onClickButton}
           isLoader={isChanging}
@@ -82,6 +85,7 @@ const StringComponent: React.FC = () => {
             <Circle
               key={index}
               letter={item}
+              data-testid={`circle-component-id${index}`}
               state={
                 modifiedState
                   ? ElementStates.Modified

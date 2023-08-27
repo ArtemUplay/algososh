@@ -104,6 +104,7 @@ export const StackPage: React.FC = () => {
           extraClass='input'
           value={inputValue}
           onChange={onInputChange}
+          data-testid='input'
         />
         <Button
           text='Добавить'
@@ -119,6 +120,7 @@ export const StackPage: React.FC = () => {
                 currentButtonValue === 'Очистить'))
           }
           isLoader={isChanging && currentButtonValue === 'Добавить'}
+          data-testid='addButton'
         />
         <Button
           text='Удалить'
@@ -134,6 +136,7 @@ export const StackPage: React.FC = () => {
                 currentButtonValue === 'Очистить'))
           }
           isLoader={isChanging && currentButtonValue === 'Удалить'}
+          data-testid='removeButton'
         />
         <div className={styles['clear-button-wrapper']}>
           <Button
@@ -150,6 +153,7 @@ export const StackPage: React.FC = () => {
                   currentButtonValue === 'Удалить'))
             }
             isLoader={isChanging && currentButtonValue === 'Очистить'}
+            data-testid='clearButton'
           />
         </div>
       </div>
