@@ -11,7 +11,7 @@ export const FibonacciPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(evt.target.value);
+    if (!isNaN(+evt.target.value)) setInputValue(evt.target.value);
   };
 
   const onClickButton = () => {
@@ -59,6 +59,7 @@ export const FibonacciPage: React.FC = () => {
           max={19}
           value={inputValue}
           onChange={onInputChange}
+          data-testid='input'
         />
         <Button
           text='Рассчитать'
@@ -67,6 +68,7 @@ export const FibonacciPage: React.FC = () => {
           disabled={
             inputValue === '' || +inputValue > 19 || inputValue.includes('-')
           }
+          data-testid='button'
         />
       </div>
       <div className={styles.circleContainer}>

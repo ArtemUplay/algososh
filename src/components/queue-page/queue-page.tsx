@@ -75,7 +75,17 @@ export class Queue<T> implements IQueue<T> {
     this.tail = 0;
   };
 
-  isEmpty = () => this.container.length === 0;
+  isEmpty = () => {
+    for (let i = 0; i < this.container.length; i++) {
+      if (this.container[i]) {
+        return false;
+      }
+    }
+
+    return this.container.length === 0;
+  };
+
+  // isEmpty = () => this.container.length === 0;
   isFull = () => this.tail - this.head === this.size;
 }
 
@@ -146,6 +156,7 @@ export const QueuePage: React.FC = () => {
           extraClass='input'
           value={inputValue}
           onChange={onInputChange}
+          data-testid='input'
         />
         <Button
           text='Добавить'
@@ -161,6 +172,7 @@ export const QueuePage: React.FC = () => {
             handleButtonClick(evt);
           }}
           isLoader={isChanging && currentButtonValue === 'Добавить'}
+          data-testid='addButton'
         />
         <Button
           text='Удалить'
@@ -178,6 +190,7 @@ export const QueuePage: React.FC = () => {
           isLoader={
             (isChanging || isDeleting) && currentButtonValue === 'Удалить'
           }
+          data-testid='removeButton'
         />
         <div className={styles['clear-button-wrapper']}>
           <Button
@@ -194,6 +207,7 @@ export const QueuePage: React.FC = () => {
               handleButtonClick(evt);
             }}
             isLoader={isChanging && currentButtonValue === 'Очистить'}
+            data-testid='clearButton'
           />
         </div>
       </div>

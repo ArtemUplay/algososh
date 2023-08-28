@@ -156,7 +156,7 @@ export const ListPage: React.FC = () => {
   };
 
   const onInputIndexValueChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setInputIndexValue(evt.target.value);
+    if (!isNaN(+evt.target.value)) setInputIndexValue(evt.target.value);
   };
 
   const onClickAddHeadButton = async () => {
@@ -267,7 +267,7 @@ export const ListPage: React.FC = () => {
     setChangingIndexArr([]);
     setChangingIndex(null);
 
-    setButtonAction(ButtonActions.RemoveByIndex);
+    setButtonAction(ButtonActions.Default);
     setInputIndexValue('');
     setIsChanging(false);
   };
@@ -284,6 +284,7 @@ export const ListPage: React.FC = () => {
             value={inputValue}
             onChange={onInputValueChange}
             disabled={isChanging}
+            data-testid='valueInput'
           />
           <Button
             text='Добавить в head'
@@ -291,6 +292,7 @@ export const ListPage: React.FC = () => {
             onClick={onClickAddHeadButton}
             disabled={!inputValue}
             isLoader={buttonAction === ButtonActions.AddHead}
+            data-testid='addHeadButton'
           />
           <Button
             text='Добавить в tail'
@@ -298,6 +300,7 @@ export const ListPage: React.FC = () => {
             onClick={onClickAddTailButton}
             disabled={!inputValue}
             isLoader={buttonAction === ButtonActions.AddTail}
+            data-testid='addTailButton'
           />
           <Button
             text='Удалить из head'
@@ -305,6 +308,7 @@ export const ListPage: React.FC = () => {
             onClick={onClickDeleteHeadButton}
             disabled={linkedListItems.length === 0}
             isLoader={buttonAction === ButtonActions.RemoveHead}
+            data-testid='removeHeadButton'
           />
           <Button
             text='Удалить из tail'
@@ -312,6 +316,7 @@ export const ListPage: React.FC = () => {
             onClick={onClickDeleteTailButton}
             disabled={linkedListItems.length === 0}
             isLoader={buttonAction === ButtonActions.RemoveTail}
+            data-testid='removeTailButton'
           />
         </div>
         <div className={styles.row}>
@@ -321,6 +326,7 @@ export const ListPage: React.FC = () => {
             value={inputIndexValue}
             onChange={onInputIndexValueChange}
             disabled={isChanging}
+            data-testid='indexInput'
           />
           <Button
             text='Добавить по индексу'
@@ -333,6 +339,7 @@ export const ListPage: React.FC = () => {
               inputValue === ''
             }
             isLoader={buttonAction === ButtonActions.AddByIndex}
+            data-testid='addByIndexButton'
           />
           <Button
             text='Удалить по индексу'
@@ -344,16 +351,12 @@ export const ListPage: React.FC = () => {
               +inputIndexValue > linkedListItems.length - 1
             }
             isLoader={buttonAction === ButtonActions.RemoveByIndex}
+            data-testid='removeByIndexButton'
           />
         </div>
       </div>
       <div className={styles.items}>
         {linkedListItems.map((item, index) => {
-          console.log(
-            isChanging &&
-              buttonAction === ButtonActions.RemoveByIndex &&
-              changingIndex === index
-          );
           return (
             <React.Fragment key={`fragment-${index}`}>
               <Circle
